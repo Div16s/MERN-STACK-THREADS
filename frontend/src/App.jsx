@@ -1,10 +1,11 @@
-import { Button, Container } from "@chakra-ui/react"
-import { Navigate, Route, Routes } from "react-router-dom"
+import { Box, Button, Container } from "@chakra-ui/react"
+import { Navigate, Route, Routes, useLocation } from "react-router-dom"
 import HomePage from "./pages/HomePage"
 import AuthPage from "./pages/AuthPage"
 import UpdateProfilePage from "./pages/UpdateProfilePage"
 import UserPage from "./pages/UserPage"
 import PostPage from "./pages/PostPage"
+import ChatPage from "./pages/ChatPage"
 import Header from "./components/Header"
 import CreatePost from "./components/CreatePost"
 import { useRecoilValue } from "recoil"
@@ -12,10 +13,11 @@ import userAtom from "./atoms/userAtom"
 
 function App() {
   const user = useRecoilValue(userAtom);
-  console.log(user);
+  const {pathname} = useLocation();
   return (
     <>
-      <Container maxW="620px">
+      <Box position={"relative"} w={"full"}>
+      <Container maxW={pathname==="/" ? {base:"620px",md:"900px"}:"620px"}>
         <Header />
         <Routes>
           <Route path="/" element={user ? <HomePage /> : <Navigate to="/auth" />} />
@@ -30,9 +32,10 @@ function App() {
             <UserPage />
           )} />
           <Route path="/:username/post/:post_id" element={<PostPage />} />
+          <Route path="/chat" element={user ? <ChatPage /> : <Navigate to={"/auth"} />} />
         </Routes>
       </Container>
-
+      </Box>
     </>
   )
 }
